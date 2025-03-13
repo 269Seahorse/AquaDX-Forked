@@ -59,7 +59,7 @@ class UserRegistrar(
         log.info("Net: /user/register from $ip : $username")
 
         // Check captcha
-        if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
+        // if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
 
         // GeoIP check to infer country
         val country = geoIP.getCountry(ip)
@@ -104,7 +104,7 @@ class UserRegistrar(
         // Check captcha
         val ip = geoIP.getIP(request)
         log.info("Net: /user/login from $ip : $email")
-        if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
+        // if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
 
         // Treat email as email / username
         val user = async { userRepo.findByEmailIgnoreCase(email) ?: userRepo.findByUsernameIgnoreCase(email) }
