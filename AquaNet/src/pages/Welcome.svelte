@@ -51,11 +51,7 @@
       return submitting = false
     }
 
-    if (turnstile === "") {
-      // Sleep for 100ms to allow Turnstile to finish
-      error = t("welcome.waiting-turnstile")
-      return setTimeout(submit, 100)
-    }
+
 
     // Signup
     if (isSignup) {
