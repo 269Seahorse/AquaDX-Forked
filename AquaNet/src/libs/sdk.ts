@@ -226,10 +226,10 @@ export async function realPost(endpoint: string, params: any, init?: RequestInit
  *
  * @param user
  */
-async function register(user: { username: string, email: string, password: string, turnstile: string }) {
+async function register(user: { username: string, email: string, password: string }) {
   return await post('/api/v2/user/register', user)
 }
-async function login(user: { email: string, password: string, turnstile: string }) {
+async function login(user: { email: string, password: string, }) {
   const data = await post('/api/v2/user/login', user)
 
   // Put token into local storage
