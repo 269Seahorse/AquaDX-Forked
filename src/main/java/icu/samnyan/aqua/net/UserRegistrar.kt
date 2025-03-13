@@ -52,14 +52,14 @@ class UserRegistrar(
     @API("/register")
     @Doc("Register a new user. This will also create a ghost card for the user and send a confirmation email.", "Success message")
     suspend fun register(
-        @RP username: Str, @RP email: Str, @RP password: Str, @RP turnstile: Str,
+        @RP username: Str, @RP email: Str, @RP password: Str,
         request: HttpServletRequest
     ): Any {
         val ip = geoIP.getIP(request)
         log.info("Net: /user/register from $ip : $username")
 
         // Check captcha
-        if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
+        // if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
 
         // GeoIP check to infer country
         val country = geoIP.getCountry(ip)
@@ -98,13 +98,13 @@ class UserRegistrar(
     @API("/login")
     @Doc("Login with email/username and password. This will also check if the email is verified and send another confirmation", "JWT token")
     suspend fun login(
-        @RP email: Str, @RP password: Str, @RP turnstile: Str,
+        @RP email: Str, @RP password: Str,
         request: HttpServletRequest
     ): Any {
         // Check captcha
         val ip = geoIP.getIP(request)
         log.info("Net: /user/login from $ip : $email")
-        if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
+        // if (!turnstileService.validate(turnstile, ip)) 400 - "Invalid captcha"
 
         // Treat email as email / username
         val user = async { userRepo.findByEmailIgnoreCase(email) ?: userRepo.findByUsernameIgnoreCase(email) }
