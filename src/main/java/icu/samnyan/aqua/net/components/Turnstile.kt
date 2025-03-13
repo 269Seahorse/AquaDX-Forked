@@ -26,7 +26,20 @@ class TurnstileService(val props: TurnstileProperties) {
     data class Outcome(val success: Boolean)
 
     suspend fun validate(captcha: Str?, ip: Str): Boolean {
-        return true
+        if (!props.enable) return true
+        if (captcha == null) return false
+
+        val outcome: Outcome = HTTP.post("https://challenges.cloudflare.com/turnstile/v0/siteverify") {
+            setBody(
+                FormDataContent(Parameters.build {
+                    append("secret", props.secret)
+                    append("response", captcha)
+                    append("remoteip", ip)
+                })
+            )
+        }.body()
+
+        return outcome.success
     }
 }
 
