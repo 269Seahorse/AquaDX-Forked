@@ -137,11 +137,11 @@
             {isSignup ? t('welcome.btn-signup') : t('welcome.btn-login')}
           {/if}
         </button>
-        <Turnstile siteKey={TURNSTILE_SITE_KEY} bind:reset={turnstileReset}
+        <!--<Turnstile siteKey={TURNSTILE_SITE_KEY} bind:reset={turnstileReset}
                    on:turnstile-callback={e => console.log(turnstile = e.detail.token)}
                    on:turnstile-error={_ => console.log(error = t("welcome.turnstile-error"))}
                    on:turnstile-expired={_ => window.location.reload()}
-                   on:turnstile-timeout={_ => console.log(error = t('welcome.turnstile-timeout'))} />
+                   on:turnstile-timeout={_ => console.log(error = t('welcome.turnstile-timeout'))} />-->
       </div>
     {:else if state === "verify"}
       <div class="login-form" transition:slide>
