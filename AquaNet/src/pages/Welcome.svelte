@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { Turnstile } from "svelte-turnstile";
   import { slide } from 'svelte/transition';
-  import { TURNSTILE_SITE_KEY } from "../libs/config";
   import Icon from "@iconify/svelte";
   import { USER } from "../libs/sdk";
   import { t } from "../libs/i18n"
@@ -15,8 +13,6 @@
   let email = ""
   let password = ""
   let username = ""
-  let turnstile = ""
-  let turnstileReset: () => void | undefined;
 
   let error = ""
   let verifyMsg = ""
@@ -51,11 +47,6 @@
       return submitting = false
     }
 
-    if (turnstile === "") {
-      // Sleep for 100ms to allow Turnstile to finish
-      error = t("welcome.waiting-turnstile")
-      return setTimeout(submit, 100)
-    }
 
     // Signup
     if (isSignup) {
@@ -65,7 +56,7 @@
       }
 
       // Send request to server
-      await USER.register({ username, email, password, turnstile })
+      await USER.register({ username, email, password })
         .then(() => {
           // Show verify email message
           state = 'verify'
@@ -74,12 +65,11 @@
         .catch(e => {
           error = e.message
           submitting = false
-          turnstileReset()
         })
     }
     else {
       // Send request to server
-      await USER.login({ email, password, turnstile })
+      await USER.login({ email, password })
         .then(() => window.location.href = "/home")
         .catch(e => {
           if (e.message === 'Email not verified - STATE_0') {
@@ -97,7 +87,6 @@
           else {
             error = e.message
             submitting = false
-            turnstileReset()
           }
         })
     }
@@ -137,11 +126,6 @@
             {isSignup ? t('welcome.btn-signup') : t('welcome.btn-login')}
           {/if}
         </button>
-        <Turnstile siteKey={TURNSTILE_SITE_KEY} bind:reset={turnstileReset}
-                   on:turnstile-callback={e => console.log(turnstile = e.detail.token)}
-                   on:turnstile-error={_ => console.log(error = t("welcome.turnstile-error"))}
-                   on:turnstile-expired={_ => window.location.reload()}
-                   on:turnstile-timeout={_ => console.log(error = t('welcome.turnstile-timeout'))} />
       </div>
     {:else if state === "verify"}
       <div class="login-form" transition:slide>
